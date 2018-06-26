@@ -15,15 +15,15 @@ white = (255,255,255)
 darkgrey = (100,100,100)
 
 #Parameters
-playerSpeed = 5
-worldSpeed = 75
-wallColor = darkgrey
+playerSpeed = 3
+worldSpeed = 80
+wallColor = black
 playerColor = white
 playerHealthColor = black
 playerHealth = 5
-worldColor=blue
-worldBrightness=10
-
+worldColor=black
+worldBrightness=0
+rBrightness=0
 
 killCount=1
 pygame.init()
@@ -36,6 +36,13 @@ color = (0,128,255)
 color2 = (255, 0 , 0)
 clock = pygame.time.Clock()
 offset=150
+playerHealthColor = (playerHealth,0,255-playerHealth)
+
+
+
+rcolor = black
+
+
 
 Sstate =0
 range = 3
@@ -62,7 +69,8 @@ while not done:
 	Goal = pygame.Rect(staticx+600,staticy-80,60,60)
 	
 	#make world
-	screen.fill((abs(movementx)*4+worldBrightness,abs(movementy)*4+worldBrightness,abs(movementx+movementy)*2+worldBrightness))
+#	screen.fill((abs(movementx)*4+worldBrightness,abs(movementy)*4+worldBrightness,abs(movementx+movementy)*2+worldBrightness))
+	screen.fill(worldColor)
 	for event in pygame.event.get():
 		if event.type == pygame.QUIT:
 				done = True
@@ -85,8 +93,14 @@ while not done:
 		killCount +=1
 		print("You were hurt, Damage: " + str(playerHealth) + "/250")
 		playerHealth += 5
-		playerHealthColor = (playerHealth,0,0) 
+		playerHealthColor = (playerHealth,0,255-playerHealth)
 		playerColor = (255-playerHealth,255-playerHealth,250-playerHealth)
+		rBrightness += 10
+		if (255 < rBrightness):
+			rBrightness = 255
+
+		rcolor = (rBrightness, 0, 0)
+
 	#out of bounds
 	elif x > 800 or x < 40 or y > 560 or y < -20:
 		y=500
@@ -94,8 +108,13 @@ while not done:
 		killCount+=1
 		playerHealth += 5
 		print("You were hurt, Damage: " + str(playerHealth) + "/250")		
-		playerHealthColor = (playerHealth,0,0)
+		playerHealthColor = (playerHealth,0,255-playerHealth)
+		rBrightness -= 10
+		if (0 > rBrightness):
+			rBrightness = 0
 		playerColor = (255-playerHealth,255-playerHealth,250-playerHealth)
+		worldColor = black#(worldBrightness, worldBrightness, worldBrightness)
+		rcolor = (rBrightness, 0, 0)
 	else: 
 		color = wallColor	
 	if playerHealth >= 250:
@@ -109,13 +128,13 @@ while not done:
 		print("You Finally Didnt Die")
 
 	#draw screen
-	pygame.draw.rect(screen, playerColor, playerOutline)
+	pygame.draw.rect(screen, white, playerOutline)
 	pygame.draw.rect(screen, playerHealthColor, playerCentre)
-	pygame.draw.rect(screen, color, r2)
-	pygame.draw.rect(screen, color, r3)
-	pygame.draw.rect(screen, color, r4)
-	pygame.draw.rect(screen, color, r5)
-	pygame.draw.rect(screen, color, r6)
+	pygame.draw.rect(screen, rcolor, r2)
+	pygame.draw.rect(screen, rcolor, r3)
+	pygame.draw.rect(screen, rcolor, r4)
+	pygame.draw.rect(screen, rcolor, r5)
+	pygame.draw.rect(screen, rcolor, r6)
 	pygame.draw.rect(screen, green, Goal)
 	pygame.display.flip()
 
